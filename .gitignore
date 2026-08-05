@@ -1,0 +1,26 @@
+# Local-only notes (job search / interview framing)
+docs/architecture.local.md
+
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+.DS_Store
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+data/raw/
+data/offline/
+data/online/
+data/training/
+*.parquet
+airflow/logs/
+airflow/plugins/
+*.log
+.idea/
+.vscode/
