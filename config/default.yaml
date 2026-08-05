@@ -1,0 +1,38 @@
+project:
+  name: meter
+  entity: zone_id
+  feature_version: v1
+
+paths:
+  raw_dir: data/raw
+  offline_dir: data/offline
+  online_dir: data/online
+  training_dir: data/training
+  sample_dir: data/sample
+
+freshness:
+  zone_trip_features_ttl_hours: 1
+  online_max_staleness_hours: 2
+  alert_if_lag_hours: 2
+
+features:
+  windows_hours: [1, 24]
+  windows_days: [7]
+
+training:
+  label_horizon_hours: 1
+  high_demand_threshold_trips: 50
+
+dq:
+  max_null_rate: 0.01
+  max_volume_drop_pct: 0.40
+  parity_sample_size: 50
+  parity_max_rel_error: 0.05
+
+online:
+  backend: local
+  dynamodb_table: meter-zone-features
+  dynamodb_region: us-east-1
+
+ingest:
+  sample_rows: 50000

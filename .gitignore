@@ -19,6 +19,7 @@ data/offline/
 data/online/
 data/training/
 *.parquet
+!data/sample/.gitkeep
 airflow/logs/
 airflow/plugins/
 *.log

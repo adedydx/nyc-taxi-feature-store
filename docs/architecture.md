@@ -271,5 +271,4 @@ Do not expand v1 into:
 - Multi-entity feature graphs
 - Real-time streaming before batch correctness is solid
 - Deep model research
-
-Depth on **PIT correctness, skew prevention, freshness, and DQ** beats breadth.
+- More important to maintain depth on PIT correctness, skew prevention, freshness, and DQ

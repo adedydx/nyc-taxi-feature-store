@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meter"
+version = "0.1.0"
+description = "NYC taxi zone feature store — offline PIT training sets, online serving, freshness & DQ"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "pandas>=2.1",
+  "pyarrow>=14.0",
+  "numpy>=1.26",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+  "ruff>=0.3",
+]
+
+[project.scripts]
+meter = "meter.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
