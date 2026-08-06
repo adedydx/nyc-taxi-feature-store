@@ -13,6 +13,8 @@ pip install -e ".[dev]"
 meter offline --rows 20000
 meter online
 meter get 1
+meter dq
+meter leakage
 pytest
 ```
 
@@ -23,3 +25,6 @@ Outputs (local):
 - `data/offline/zone_features.parquet`
 - `data/training/training_set.parquet`
 - `data/online/zone_features.json` (latest features by `zone_id`)
+- `data/offline/dq_report.json`
+
+See [docs/leakage-demo.md](docs/leakage-demo.md) for the leaky vs PIT explanation.
