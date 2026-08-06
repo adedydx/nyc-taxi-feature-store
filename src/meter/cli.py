@@ -1,4 +1,4 @@
-"""CLI for offline and online feature-store paths."""
+"""CLI for offline/online paths, DQ gates, and leakage demo."""
 
 from __future__ import annotations
 
@@ -47,6 +47,30 @@ def _run_get(zone_id: int) -> int:
     return 0
 
 
+def _run_dq() -> int:
+    from meter.config import get_settings
+    from meter.dq.checks import run_dq_suite, write_dq_report
+
+    settings = get_settings()
+    report = run_dq_suite(settings=settings)
+    out = write_dq_report(report, settings.path("offline_dir") / "dq_report.json")
+    print(json.dumps(report.to_dict(), indent=2))
+    print(f"DQ report written: {out}")
+    if not report.passed:
+        print(f"DQ FAILED: {report.failed_names()}")
+        return 1
+    print("DQ PASSED")
+    return 0
+
+
+def _run_leakage() -> int:
+    from meter.dq.leakage import run_leakage_demo
+
+    result = run_leakage_demo()
+    print(json.dumps(result.to_dict(), indent=2))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="meter",
@@ -76,6 +100,15 @@ def main(argv: list[str] | None = None) -> int:
     )
     get_cmd.add_argument("zone_id", type=int, help="Taxi zone id")
 
+    sub.add_parser(
+        "dq",
+        help="Run DQ gates (ingest, features, freshness, online/offline parity)",
+    )
+    sub.add_parser(
+        "leakage",
+        help="Demo leaky join vs correct PIT join on the training set",
+    )
+
     args = parser.parse_args(argv)
 
     if args.command == "offline":
@@ -92,6 +125,12 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "get":
         return _run_get(args.zone_id)
+
+    if args.command == "dq":
+        return _run_dq()
+
+    if args.command == "leakage":
+        return _run_leakage()
 
     parser.error(f"Unknown command: {args.command}")
     return 2
