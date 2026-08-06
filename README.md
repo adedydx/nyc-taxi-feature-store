@@ -11,6 +11,8 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 meter offline --rows 20000
+meter online
+meter get 1
 pytest
 ```
 
@@ -20,3 +22,4 @@ Outputs (local):
 - `data/offline/zone_hours.parquet`
 - `data/offline/zone_features.parquet`
 - `data/training/training_set.parquet`
+- `data/online/zone_features.json` (latest features by `zone_id`)
