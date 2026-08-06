@@ -1,8 +1,9 @@
-"""CLI for the offline feature / training pipeline."""
+"""CLI for offline and online feature-store paths."""
 
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 
@@ -29,6 +30,23 @@ def _run_offline(sample_rows: int | None = None) -> dict[str, Path]:
     }
 
 
+def _run_online() -> Path:
+    from meter.online.store import push_latest_to_online
+
+    return push_latest_to_online()
+
+
+def _run_get(zone_id: int) -> int:
+    from meter.online.store import get_features
+
+    payload = get_features(zone_id)
+    if payload is None:
+        print(f"No online features for zone_id={zone_id}")
+        return 1
+    print(json.dumps(payload, indent=2, default=str))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="meter",
@@ -47,6 +65,17 @@ def main(argv: list[str] | None = None) -> int:
         help="Override sample trip row count (default from config)",
     )
 
+    sub.add_parser(
+        "online",
+        help="Push latest-per-zone features from offline store to online store",
+    )
+
+    get_cmd = sub.add_parser(
+        "get",
+        help="Low-latency lookup of latest online features for a zone",
+    )
+    get_cmd.add_argument("zone_id", type=int, help="Taxi zone id")
+
     args = parser.parse_args(argv)
 
     if args.command == "offline":
@@ -55,6 +84,14 @@ def main(argv: list[str] | None = None) -> int:
         for name, path in paths.items():
             print(f"  {name}: {path}")
         return 0
+
+    if args.command == "online":
+        path = _run_online()
+        print(f"Online push complete: {path}")
+        return 0
+
+    if args.command == "get":
+        return _run_get(args.zone_id)
 
     parser.error(f"Unknown command: {args.command}")
     return 2

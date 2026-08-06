@@ -41,3 +41,15 @@ TRAINING_COLUMNS = FEATURE_COLUMNS + [
     "label_trips_next_1h",
     "label_high_demand",
 ]
+
+ONLINE_KEY = "zone_id"
+ONLINE_PAYLOAD_FIELDS = [
+    "as_of_ts",
+    "feature_version",
+    "trips_1h",
+    "trips_24h",
+    "trips_7d",
+    "avg_fare_24h",
+    "avg_distance_24h",
+    "computed_at",
+]
